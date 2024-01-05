@@ -1,0 +1,4 @@
+:host {
+  /* @apply border-red-600 border-2; */
+  @apply flex h-screen justify-center;
+}
