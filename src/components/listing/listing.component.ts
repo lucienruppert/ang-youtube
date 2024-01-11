@@ -9,13 +9,24 @@ import { ApiClientService } from '../../services/api-client.service';
 export class ListingComponent {
   constructor(private ApiClient: ApiClientService) {}
 
-  private videoListData: any;
-  public videoList: any;
+  public videoList: gapi.client.youtube.PlaylistItem[] | undefined;
   public isButtonDisabled: boolean = false;
 
-  public async getList() {
-    this.videoListData = await this.ApiClient.getVideoList();
-    this.videoList = this.videoListData.result.items;
+  public async loadList() {
+    const videoListData = await this.ApiClient.getVideoList();
+    if (!videoListData) return;
+    this.videoList = videoListData.result.items;
     this.isButtonDisabled = true;
+  }
+
+  public getURLFor(videoData: gapi.client.youtube.PlaylistItem): string {
+    return `https://www.youtube.com/watch?v=${videoData.snippet!.resourceId!.videoId}`;
+  }
+
+  public getTitleFor(videoData: gapi.client.youtube.PlaylistItem): string {
+    const title = videoData.snippet!.title!
+    return (title.includes("A.J. Christian - ")
+          ? title.replace("A.J. Christian - ", "")
+          : title);
   }
 }

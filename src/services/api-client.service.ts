@@ -1,14 +1,23 @@
 import { Injectable } from '@angular/core';
 
-declare const gapi: any;
+enum ChannelProperty {
+  snippet = 'snippet',
+  contentDetails = 'contentDetails',
+  statistics = 'statistics',
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiClientService {
-  constructor() {}
+  private static CHANNEL_ID = 'UCNfGAeIGB6qTXkyvlnMv3-g';
+  private static CHANNEL_PROPERTIES: Array<ChannelProperty> = [
+    ChannelProperty.snippet,
+    ChannelProperty.contentDetails,
+    ChannelProperty.statistics,
+  ];
 
-  public init() {
+  public init(): void {
     gapi.load('client', () => {
       gapi.client
         .init({
@@ -26,26 +35,22 @@ export class ApiClientService {
     });
   }
 
-  public getVideoList() {
-    return gapi.client.youtube.channels
-      .list({
-        part: ['snippet,contentDetails,statistics'],
-        id: 'UCNfGAeIGB6qTXkyvlnMv3-g',
-      })
-      .then((channelData: any) => {
-        const playlistId =
-          channelData.result.items[0].contentDetails.relatedPlaylists.uploads;
-        return gapi.client.youtube.playlistItems.list({
-          part: 'snippet',
-          playlistId,
-          maxResults: 50,
-        });
-      })
-      .then((videoListData: any) => {
-        return videoListData;
-      })
-      .catch((error: Error) => {
-        console.error('Execute error', error);
+  public async getVideoList(): Promise<void | gapi.client.Response<gapi.client.youtube.PlaylistItemListResponse>> {
+    try {
+      const channelData = await gapi.client.youtube.channels.list({
+        part: ApiClientService.CHANNEL_PROPERTIES,
+        id: ApiClientService.CHANNEL_ID,
       });
+      const playlistId =
+        channelData.result.items![0].contentDetails!.relatedPlaylists!.uploads;
+      const result = await gapi.client.youtube.playlistItems.list({
+        part: 'snippet',
+        playlistId,
+        maxResults: 50,
+      });
+      return result;
+    } catch (error: unknown) {
+      console.error('Execute error', error);
+    }
   }
 }

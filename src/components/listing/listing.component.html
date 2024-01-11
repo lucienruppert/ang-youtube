@@ -1,20 +1,12 @@
-<button (click)="getList()" [disabled]="isButtonDisabled">
+<button (click)="loadList()" [disabled]="isButtonDisabled">
   Kérem a videólistát
 </button>
 <ul>
   <li *ngFor="let videoData of videoList; index as i">
     <span>{{ i + 1 }}.</span>
-    <a
-      href="https://www.youtube.com/watch?v={{
-        videoData.snippet.resourceId.videoId
-      }}"
-      target="blank"
-      >{{
-        videoData.snippet.title.includes("A.J. Christian - ")
-          ? videoData.snippet.title.replace('A.J. Christian - ', '')
-          : videoData.snippet.title
-      }}
-      ({{ videoData.snippet.publishedAt.slice(0, 10) }})</a
-    >
+    <a [href]="getURLFor(videoData)" target="blank">
+      {{ getTitleFor(videoData) }}
+      ({{ videoData.snippet!.publishedAt!.slice(0, 10) }})
+    </a>
   </li>
 </ul>
