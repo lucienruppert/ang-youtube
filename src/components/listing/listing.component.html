@@ -6,7 +6,7 @@
     <span>{{ i + 1 }}.</span>
     <a [href]="getURLFor(videoData)" target="blank">
       {{ getTitleFor(videoData) }}
-      ({{ videoData.snippet!.publishedAt!.slice(0, 10) }})
+      ({{ videoData.snippet!.publishedAt! | slice:0:10 }})
     </a>
   </li>
 </ul>
