@@ -1,6 +1,7 @@
 <button (click)="loadList()" [disabled]="isButtonDisabled">
   Kérem a videólistát
 </button>
+<span class="spinner"><mat-spinner color="warn" diameter="50" [ngStyle]="{ 'display': showSpinner ? 'block' : 'none' }"></mat-spinner></span>
 <ul>
   <li *ngFor="let videoData of videoList; index as i">
     <span>{{ i + 1 }}.</span>

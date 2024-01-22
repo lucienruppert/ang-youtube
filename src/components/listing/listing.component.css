@@ -1,5 +1,4 @@
 :host {
-  /* @apply border-red-600 border-2; */
   @apply w-full flex flex-col items-center;
 }
 button {
@@ -21,5 +20,8 @@ li:hover {
   @apply text-white;
 }
 span {
-  @apply font-semibold w-6 inline-block;
+  @apply font-semibold inline-block;
+}
+.spinner {
+  @apply flex justify-center;
 }
