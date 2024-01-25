@@ -17,21 +17,19 @@ export class ApiClientService {
     ChannelProperty.statistics,
   ];
 
-  public init(): void {
-    gapi.load('client', () => {
-      gapi.client
-        .init({
+  public async init(): Promise<void> {
+    gapi.load('client', async (): Promise<void> => {
+      try {
+        await gapi.client.init({
           apiKey: 'AIzaSyBzYykg8aExJ7z40c4HjGgaMdrRl856FQw',
           discoveryDocs: [
             'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest',
           ],
-        })
-        .then(() => {
-          console.log('YouTube API client loaded.');
-        })
-        .catch((error: Error) => {
-          console.error('Error loading YouTube API client:', error);
         });
+        console.log('YouTube API client loaded.');
+      } catch(error: unknown) {
+          console.error('Error loading YouTube API client:', error);
+        };
     });
   }
 
